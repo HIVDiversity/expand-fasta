@@ -144,7 +144,7 @@ def expand_without_namefile(sequences: dict[str, str], num_seq_element_idx: int 
             
             # TODO: This could throw unexpected IndexOutOfBoundsError
             new_name = "_".join(split_name[:5])
-            new_name += f"_{str(seq_num).rjust(4, "0")}"
+            new_name += f"_{str(seq_num).rjust(4, '0')}"
             uncollapsed_seqs[new_name] = seq
             
     return uncollapsed_seqs
@@ -191,3 +191,24 @@ def workflow(
     log.info("Writing to file.")
     dict_to_fasta(uncollapsed_sequences, output_fasta, False)
     log.info("Done. Exiting.")
+
+
+def workflow_expand_without_namefile(collapsed_fasta: Path,
+    output_fasta: Path,
+    num_seq_element: int = 5):
+    
+    log.info("Reading the collapsed sequences")
+    collapsed_seqs = fasta_to_dict(collapsed_fasta)
+    log.info("Done.")
+
+    log.info("Uncollapsing *without* namefile.")
+    uncollapsed_sequences = expand_without_namefile(
+        collapsed_seqs, num_seq_element
+    )
+    log.info("Done.")
+
+    log.info("Writing to file.")
+    dict_to_fasta(uncollapsed_sequences, output_fasta, False)
+    log.info("Done. Exiting.")
+
+    

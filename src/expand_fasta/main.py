@@ -4,7 +4,7 @@ from typing_extensions import Annotated
 from pathlib import Path
 from expand_fasta import expand
 
-app = typer.Typer(add_completion=False)
+app = typer.Typer(add_completion=False, no_args_is_help=True)
 
 @app.command("expand")
 def cli_expand_fasta_file(
@@ -33,6 +33,20 @@ def cli_expand_fasta_file(
         use_namefile_ref= not use_fasta_as_ref,
     )
 
+@app.command("expand-without-names")
+def cli_expand_without_names(collapsed_fasta: Annotated[
+        Path, typer.Argument(help="The path to the uncollapsed input file.")
+    ],
+    output_fasta: Annotated[
+        Path, typer.Argument(help="The path to write the files to.")
+    ]):
+    
+    expand.workflow_expand_without_namefile(
+        collapsed_fasta=collapsed_fasta,
+        output_fasta=output_fasta,
+        # TODO: Remove hardcoded number here
+        num_seq_element=5
+    )
 
 def run():
     app()
