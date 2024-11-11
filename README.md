@@ -44,19 +44,29 @@ expand-fasta --help
 Which will return:
 
 ```text
-Usage: expand-fasta [OPTIONS] COLLAPSED_FASTA NEW_TO_OLD_NAMES OUTPUT_FASTA                                   
-                                                                                                               
-╭─ Arguments ─────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ *    collapsed_fasta       PATH  The path to the uncollapsed input file. [default: None] [required]         │
-│ *    new_to_old_names      PATH  The path to the mapping file in json format [default: None] [required]     │
-│ *    output_fasta          PATH  The path to write the files to. [default: None] [required]                 │
-╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --use-fasta-names          If set, will fetch the sequences in the FASTA file using the names in the name   │
-│                            file.                                                                            │
-│ --help                     Show this message and exit.                                                      │
-╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+Usage: expand-fasta [OPTIONS] COMMAND [ARGS]...                                                
+                                                                                                
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                                  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────────────────────╮
+│ expand                                                                                       │
+│ expand-without-names   Given an collapsed FASTA file, returns a new FASTA file with the      │
+│                        correct number of uncollapsed sequences, without needing a namefile.  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
+### Commands
+The `expand` command is used when you want to map the collapsed names in the fasta file to their previously uncollapsed names. It requires you to have a namefile. 
+
+The `expand-without-names` does what is said on the box. It will just used the sequence names to determine how many copies of the collapsed sequence to make. 
+
+For example: `CAP040_2010_ENV_NT_0017_0001` will be left as is (since there's only one sequence) but `CAP040_2010_ENV_NT_0022_0003` will be expanded to be three sequences:
+
+- `CAP040_2010_ENV_NT_0022_0001`
+- `CAP040_2010_ENV_NT_0022_0002`
+- `CAP040_2010_ENV_NT_0022_0003`
+
+Importantly, this does mean that the last item of the new name takes on a different meaning. It is a simple counter rather than representing the number of collapsed sequences, like it did for the names in the collapsed file.
 
 #### `--use-fasta-names`
 
