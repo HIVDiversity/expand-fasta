@@ -122,6 +122,35 @@ def expand_fasta_dictionary(
     return new_fasta_file
 
 
+def expand_without_namefile(sequences: dict[str, str], num_seq_element_idx: int = 5) -> dict[str, str]:
+    uncollapsed_seqs: dict[str, str] = {}
+
+    for name, seq in sequences.items():
+        split_name = name.split("_")
+
+        if num_seq_element_idx >= len(split_name):
+            log.error(f"The sequence with name '{name}' is likely in the incorrect format, since after splitting with '_' it doesn't have the right length")
+            exit(1)
+
+        num_seqs_portion = split_name[4]
+        
+        if not num_seqs_portion.isnumeric():
+            log.error(f"The number portion is not numeric for sequence {name}. We attempted to convert '{num_seqs_portion}' to an int.")
+            exit(1)
+            
+        number_of_seqs = int(num_seqs_portion)
+        
+        for seq_num in range(number_of_seqs):
+            
+            # TODO: This could throw unexpected IndexOutOfBoundsError
+            new_name = "_".join(split_name[:5])
+            new_name += f"_{str(seq_num).rjust(4, "0")}"
+            uncollapsed_seqs[new_name] = seq
+            
+    return uncollapsed_seqs
+        
+
+
 def read_name_mapping(namefile: Path) -> dict[str, list[str]]:
     """Read the old-to-new name mapping in from a json file.
 
