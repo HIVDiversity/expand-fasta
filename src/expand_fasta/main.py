@@ -4,7 +4,7 @@ from typing_extensions import Annotated
 from pathlib import Path
 from expand_fasta import expand
 
-app = typer.Typer(add_completion=False, no_args_is_help=True)
+app = typer.Typer(add_completion=False, no_args_is_help=True, rich_markup_mode="rich")
 
 @app.command("expand")
 def cli_expand_fasta_file(
@@ -40,7 +40,20 @@ def cli_expand_without_names(collapsed_fasta: Annotated[
     output_fasta: Annotated[
         Path, typer.Argument(help="The path to write the files to.")
     ]):
-    
+    """Given an collapsed FASTA file, returns a new FASTA file with the correct number of uncollapsed sequences, [bold red]without[/bold red] needing a namefile.
+
+    :red_circle: [bold red]NB[/bold red] :red_circle:
+    It is very important that the names in the collapsed FASTA have the correct format. This program assumes that they have 6 elements, separated by 5 underscores:
+
+    CAPID_VISITCODE_REGION_SEQTYPE_ID_NUMSEQS
+
+    It is vital that the `NUMSEQS` region is the last in the name.
+
+    Args:
+        collapsed_fasta (Annotated[ Path, typer.Argument, optional): _description_. Defaults to "The path to the uncollapsed input file.") ].
+        output_fasta (Annotated[ Path, typer.Argument, optional): _description_. Defaults to "The path to write the files to.") ].
+    """
+
     expand.workflow_expand_without_namefile(
         collapsed_fasta=collapsed_fasta,
         output_fasta=output_fasta,

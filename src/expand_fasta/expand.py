@@ -132,7 +132,7 @@ def expand_without_namefile(sequences: dict[str, str], num_seq_element_idx: int 
             log.error(f"The sequence with name '{name}' is likely in the incorrect format, since after splitting with '_' it doesn't have the right length")
             exit(1)
 
-        num_seqs_portion = split_name[4]
+        num_seqs_portion = split_name[num_seq_element_idx]
         
         if not num_seqs_portion.isnumeric():
             log.error(f"The number portion is not numeric for sequence {name}. We attempted to convert '{num_seqs_portion}' to an int.")
@@ -144,7 +144,7 @@ def expand_without_namefile(sequences: dict[str, str], num_seq_element_idx: int 
             
             # TODO: This could throw unexpected IndexOutOfBoundsError
             new_name = "_".join(split_name[:5])
-            new_name += f"_{str(seq_num).rjust(4, '0')}"
+            new_name += f"_{str(seq_num + 1).rjust(4, '0')}"
             uncollapsed_seqs[new_name] = seq
             
     return uncollapsed_seqs
